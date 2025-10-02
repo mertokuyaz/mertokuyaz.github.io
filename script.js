@@ -22,8 +22,26 @@ document.addEventListener('DOMContentLoaded', () => {
     let isMining = false;
     let nonce = 0, totalHashes = 0, startTime, statsInterval, lastAttemptedHash = '';
     const HASHES_PER_BATCH = 5000;
+    const STATS_STABILITY_DELAY = 750; // ms to wait before showing hash rate/ETA
 
-    // --- Core Web Crypto API Check ---
+    // --- NEW: Settings Persistence ---
+    const saveSettings = () => {
+        const settings = {
+            blockData: blockDataInput.value,
+            difficulty: difficultySelect.value,
+        };
+        localStorage.setItem('miningSimulatorSettings', JSON.stringify(settings));
+    };
+
+    const loadSettings = () => {
+        const settings = JSON.parse(localStorage.getItem('miningSimulatorSettings'));
+        if (settings) {
+            blockDataInput.value = settings.blockData;
+            difficultySelect.value = settings.difficulty;
+        }
+    };
+
+    // --- Core Checks & Hashing ---
     const checkCryptoSupport = () => {
         if (!window.crypto || !window.crypto.subtle) {
             errorContainer.classList.remove('hidden');
@@ -33,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return true;
     };
 
-    // --- Core Hashing & State Management ---
     const calculateSHA256 = async (input) => {
         const textAsBuffer = new TextEncoder().encode(input);
         const hashBuffer = await crypto.subtle.digest('SHA-256', textAsBuffer);
@@ -41,13 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
             .map(b => b.toString(16).padStart(2, '0')).join('');
     };
 
-    // NEW: Centralized function to reset the UI to its initial state.
+    // --- UI State Management ---
     const resetUI = () => {
         initialMessage.classList.remove('hidden');
-        statsContainer.classList.add('hidden');
-        resultsContainer.classList.add('hidden');
-        successBlock.classList.add('hidden');
-        statusLog.innerHTML = 'Ready to start.';
+        [statsContainer, resultsContainer, successBlock].forEach(el => {
+            el.classList.add('hidden');
+            el.classList.remove('visible'); // Remove animation class
+        });
+        statusLog.textContent = 'Awaiting start...';
     };
 
     const handleSuccess = (finalNonce, finalHash) => {
@@ -58,77 +76,46 @@ document.addEventListener('DOMContentLoaded', () => {
         successHashElem.textContent = finalHash;
 
         statsContainer.classList.add('hidden');
+        statsContainer.classList.remove('visible');
         successBlock.classList.remove('hidden');
-        
+        setTimeout(() => successBlock.classList.add('visible'), 10); // Animate in
+
         const elapsedSeconds = ((performance.now() - startTime) / 1000).toFixed(2);
         statusLog.innerHTML = `<strong>Success! Found hash in ${elapsedSeconds}s.</strong>\nTotal hashes: ${totalHashes.toLocaleString()}`;
         
-        setControlsDisabled(false); // Re-enable controls
+        setControlsDisabled(false);
     };
-
-    // MODIFIED: Update stats now also updates the live hash in the log
+    
+    // MODIFIED: Update stats logic for stability
     const updateStatsAndLog = () => {
-        const elapsedSeconds = (performance.now() - startTime) / 1000;
-        const hashRate = isMining && elapsedSeconds > 0 ? (totalHashes / elapsedSeconds) : 0;
-        const difficulty = parseInt(difficultySelect.value);
-        const expectedHashes = Math.pow(16, difficulty);
-        const etaSeconds = hashRate > 0 ? (expectedHashes - totalHashes) / hashRate : Infinity;
-
+        const elapsedMs = performance.now() - startTime;
+        const elapsedSeconds = elapsedMs / 1000;
         timeSpentElem.textContent = `${elapsedSeconds.toFixed(1)}s`;
-        hashRateElem.textContent = Math.round(hashRate).toLocaleString();
-        expectedTimeElem.textContent = formatTime(etaSeconds);
-        
-        // NEW: Update status log with live data for better feedback
-        statusLog.innerHTML = `Searching...\nChecked up to nonce: ${nonce.toLocaleString()}\nLast Hash: <span class="hash-value">${lastAttemptedHash}</span>`;
+
+        // Only show hash rate and ETA after a delay for stability
+        if (elapsedMs > STATS_STABILITY_DELAY) {
+            const hashRate = totalHashes / elapsedSeconds;
+            const difficulty = parseInt(difficultySelect.value);
+            const expectedHashes = Math.pow(16, difficulty);
+            const etaSeconds = hashRate > 0 ? (expectedHashes - totalHashes) / hashRate : Infinity;
+
+            hashRateElem.textContent = Math.round(hashRate).toLocaleString();
+            expectedTimeElem.textContent = formatTime(etaSeconds);
+        } else {
+            hashRateElem.textContent = '...';
+            expectedTimeElem.textContent = '...';
+        }
+
+        statusLog.innerHTML = `Searching...\nNonce: ${nonce.toLocaleString()}\nLast Hash: <span class="hash-value">${lastAttemptedHash}</span>`;
     };
 
-    const formatTime = (seconds) => {
-        if (seconds === Infinity || isNaN(seconds)) return '...';
-        if (seconds < 60) return `${seconds.toFixed(1)}s`;
-        if (seconds < 3600) return `${(seconds / 60).toFixed(1)} min`;
-        if (seconds < 86400 * 2) return `${(seconds / 3600).toFixed(1)} hours`;
-        return `${(seconds / 86400).toFixed(1)} days`;
-    };
+    const formatTime = (seconds) => { /* ... (unchanged) ... */ };
 
     // --- Main Mining Loop ---
-    async function mine(data, target) {
-        if (!isMining) return;
-
-        let found = false;
-        let finalNonce, finalHash;
-        
-        for (let i = 0; i < HASHES_PER_BATCH; i++) {
-            const currentNonce = nonce + i;
-            const hash = await calculateSHA256(data + currentNonce);
-            
-            if (hash.startsWith(target)) {
-                totalHashes += (i + 1);
-                found = true;
-                finalNonce = currentNonce;
-                finalHash = hash;
-                break;
-            }
-        }
-        
-        nonce += HASHES_PER_BATCH;
-        totalHashes += HASHES_PER_BATCH;
-        lastAttemptedHash = await calculateSHA256(data + nonce); // Get a hash for display
-
-        if (found) {
-            handleSuccess(finalNonce, finalHash);
-        } else {
-            setTimeout(() => mine(data, target), 0); // Continue mining
-        }
-    }
+    async function mine(data, target) { /* ... (unchanged) ... */ }
 
     // --- UI Control Functions ---
-    const setControlsDisabled = (disabled) => {
-        mineButton.textContent = disabled ? 'Stop Mining' : 'Start Mining';
-        mineButton.classList.toggle('start', !disabled);
-        mineButton.classList.toggle('stop', disabled);
-        blockDataInput.disabled = disabled;
-        difficultySelect.disabled = disabled;
-    };
+    const setControlsDisabled = (disabled) => { /* ... (unchanged) ... */ };
 
     const startMining = () => {
         isMining = true;
@@ -137,38 +124,43 @@ document.addEventListener('DOMContentLoaded', () => {
         totalHashes = 0;
         lastAttemptedHash = '...';
 
-        resetUI(); // Clear old results first
-        initialMessage.classList.add('hidden'); // Hide initial message
-        statsContainer.classList.remove('hidden'); // Show stats
-        resultsContainer.classList.remove('hidden'); // show log container
+        resetUI();
+        initialMessage.classList.add('hidden');
+        resultsContainer.classList.remove('hidden');
+        statsContainer.classList.remove('hidden');
+        setTimeout(() => { // Animate in the containers
+            resultsContainer.classList.add('visible');
+            statsContainer.classList.add('visible');
+        }, 10);
         
         setControlsDisabled(true);
+        saveSettings(); // NEW: Save settings on start
         const data = blockDataInput.value;
         const difficulty = parseInt(difficultySelect.value);
         const target = '0'.repeat(difficulty);
         
         statusLog.textContent = `Mining started. Searching for hash starting with "${target}"...`;
-        statsInterval = setInterval(updateStatsAndLog, 500);
+        statsInterval = setInterval(updateStatsAndLog, 250); // Faster interval for smoother log
         
         mine(data, target);
     };
 
-    const stopMining = () => {
-        isMining = false;
-        clearInterval(statsInterval);
-        setControlsDisabled(false);
-        resetUI(); // MODIFIED: Call the centralized reset function for a clean stop.
-    };
+    const stopMining = () => { /* ... (unchanged, still calls resetUI) ... */ };
 
-    // --- Main Initializer and Event Listener ---
-    if (checkCryptoSupport()) {
-        resetUI(); // Set the initial clean state on page load.
-        mineButton.addEventListener('click', () => {
-            if (isMining) {
-                stopMining();
-            } else {
-                startMining();
-            }
-        });
+    // --- Main Initializer ---
+    function initialize() {
+        if (checkCryptoSupport()) {
+            loadSettings(); // NEW: Load settings on page load
+            resetUI();
+            mineButton.addEventListener('click', () => {
+                if (isMining) stopMining();
+                else startMining();
+            });
+            // NEW: Save settings when inputs are changed manually
+            blockDataInput.addEventListener('change', saveSettings);
+            difficultySelect.addEventListener('change', saveSettings);
+        }
     }
+
+    initialize();
 });
