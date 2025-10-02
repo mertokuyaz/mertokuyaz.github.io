@@ -2,7 +2,7 @@
 
 An interactive, browser-based tool designed to visually and interactively explain the fundamental concept of Bitcoin mining and Proof-of-Work. This simulator allows users to see the "guess and check" process of finding a valid hash in real-time, right in their browser.
 
-This project was created and conceptualized by [Mert](https://x.com/mertokuyazz).
+This project was created and conceptualized by [Mert Okuyaz](https://x.com/mertokuyazz).
 
 **[Live Demo]**  
 mertokuyaz.github.io
