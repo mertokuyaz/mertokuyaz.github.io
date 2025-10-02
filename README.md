@@ -5,7 +5,7 @@ An interactive, browser-based tool designed to visually and interactively explai
 This project was created and conceptualized by [Mert Okuyaz](https://x.com/mertokuyazz).
 
 Live Demo
-mertokuyaz.github.io
+[mertokuyaz.github.io](mertokuyaz.github.io)
 
 ![Bitcoin Mining Simulator in Action](./screenshot.png)  
 
