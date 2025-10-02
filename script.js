@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const blockDataInput = document.getElementById('block-data');
     const difficultySelect = document.getElementById('difficulty');
     const statusLog = document.getElementById('status-log');
+    const themeToggle = document.getElementById('theme-toggle');
     
     // UI Containers
     const errorContainer = document.getElementById('error-container');
@@ -22,6 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
     let isMining = false;
     let nonce = 0, totalHashes = 0, startTime, statsInterval, lastAttemptedHash = '';
     const HASHES_PER_BATCH = 5000;
+
+    // --- Theme Management ---
+    const initializeTheme = () => {
+        const savedTheme = localStorage.getItem('bitcoin-miner-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+        
+        document.documentElement.setAttribute('data-theme', theme);
+    };
+
+    const toggleTheme = () => {
+        console.log('Toggle theme function called');
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        console.log('Current theme:', currentTheme);
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        console.log('New theme:', newTheme);
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('bitcoin-miner-theme', newTheme);
+        console.log('Theme changed to:', newTheme);
+    };
 
     // --- Core Web Crypto API Check ---
     const checkCryptoSupport = () => {
@@ -160,7 +182,25 @@ document.addEventListener('DOMContentLoaded', () => {
         resetUI(); // MODIFIED: Call the centralized reset function for a clean stop.
     };
 
-    // --- Main Initializer and Event Listener ---
+    // --- Main Initializer and Event Listeners ---
+    // Initialize theme first
+    initializeTheme();
+    
+    // Theme toggle event listener
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+        console.log('Theme toggle button found and event listener attached');
+    } else {
+        console.error('Theme toggle button not found!');
+    }
+    
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('bitcoin-miner-theme')) {
+            document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+        }
+    });
+    
     if (checkCryptoSupport()) {
         resetUI(); // Set the initial clean state on page load.
         mineButton.addEventListener('click', () => {
