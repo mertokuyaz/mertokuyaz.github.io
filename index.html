@@ -43,7 +43,6 @@ Timestamp: 1678912345</textarea>
             <div class="form-group">
                 <label for="difficulty">Difficulty (Required leading zeros)</label>
                 <select id="difficulty">
-                    <option value="3">3 (Trivial)</option>
                     <option value="4">4 (Easy)</option>
                     <option value="5" selected>5 (Medium)</option>
                     <option value="6">6 (Hard)</option>
@@ -125,12 +124,30 @@ Timestamp: 1678912345</textarea>
                 The <strong>Extreme (7)</strong> difficulty setting gives a taste of the "golden age" of CPU mining around 2009. The original block reward was <strong>50 BTC</strong>. With so few people on the network, it was theoretically possible for a hobbyist with a mediocre PC to solve a couple of blocks in just a few hours. That 3 hours of proof-of-work could have earned them 100 BTC, worth around <strong>$5 million</strong> at today's prices.
             </p>
         </div>
+        
+        <div class="card explanation-card">
+            <h2>Current Bitcoin Mining Reality (2024)</h2>
+            <p>
+                While this simulator lets you experience mining with just a few leading zeros, <strong>real Bitcoin mining today requires finding hashes with at least 17-18 leading zeros</strong>. This represents an astronomical increase in difficulty since Bitcoin's early days.
+            </p>
+            <ul>
+                <li><strong>Impossible for Solo Mining:</strong> The current difficulty is so high that even the most powerful consumer hardware would take thousands of years to find a single valid block.</li>
+                <li><strong>CPU/GPU Mining is Dead:</strong> Regular computer processors and graphics cards are completely obsolete for Bitcoin mining. They simply cannot compete with the hash rates required.</li>
+                <li><strong>ASIC Machines Only:</strong> Today's Bitcoin miners use specialized hardware called ASICs (Application-Specific Integrated Circuits) that are designed exclusively for SHA-256 hashing. These machines can perform hundreds of terahashes per second.</li>
+                <li><strong>Industrial Scale:</strong> Modern Bitcoin mining operations are massive industrial facilities with thousands of ASIC machines, consuming megawatts of electricity and requiring sophisticated cooling systems.</li>
+            </ul>
+            <p>
+                The difficulty adjustment mechanism ensures that blocks are found approximately every 10 minutes regardless of the total network hash rate. As more powerful mining equipment joins the network, the difficulty automatically increases to maintain this timing. This is why Bitcoin mining has evolved from a hobby anyone could do on their laptop to a highly specialized industrial operation.
+            </p>
+        </div>
     </div>
     <!-- ***** END OF RESTORED CONTENT ***** -->
 
     <script src="script.js"></script>
 </body>
 </html>
+
+
 
 
 
