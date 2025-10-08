@@ -110,6 +110,21 @@ Timestamp: 1678912345</textarea>
     </main>
     
     <!-- ***** EXPLANATION CONTENT RESTORED ***** -->
+        <div class="card explanation-card">
+            <h2>What is SHA-256?</h2>
+            <p>
+                SHA-256 (Secure Hash Algorithm 256-bit) is a cryptographic hash function that takes an input and produces a 256-bit (32-byte) hash value. This output is a unique, fixed-size string of characters, often represented as a 64-character hexadecimal string.
+            </p>
+            <p>
+                Crucially, SHA-256 is a <strong>one-way algorithm</strong>. This means it's easy to compute a hash from an input, but virtually impossible to reverse the process to find the input from its hash. The only way to find a specific hash is through brute-force—trying endless combinations.
+            </p>
+            <p>
+                In Bitcoin mining, miners combine the block data (previous hash, Merkle root, timestamp) with a 'nonce'. They hash this combined data, and if the output doesn't meet the difficulty target, they change the nonce and try again. This brute-force process is the essence of Proof-of-Work.
+            </p>
+            <p>
+                You can experiment with SHA-256 yourself using this online tool: <a href="https://emn178.github.io/online-tools/sha256.html" target="_blank" rel="noopener noreferrer">SHA-256 Online Tool</a>.
+            </p>
+        </div>
     <div class="explanation-container">
         <div class="card explanation-card">
             <h2>How Bitcoin Mining Works</h2>
@@ -164,7 +179,6 @@ Timestamp: 1678912345</textarea>
     <script src="script.js"></script>
 </body>
 </html>
-
 
 
 
