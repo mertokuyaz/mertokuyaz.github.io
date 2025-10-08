@@ -207,6 +207,9 @@ pre#status-log {
 /* --- Explanation --- (no changes) */
 
 /* --- Responsive Design --- */
-@media (max-width: 900px) { .simulator-layout, .explanation-container { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .simulator-layout, .explanation-container { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 500px) { body { padding: 1rem; } .card { padding: 1.25rem; } #stats-container { flex-direction: column; align-items: flex-start; } }
+
+
+
 
