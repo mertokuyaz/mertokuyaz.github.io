@@ -7,7 +7,7 @@ This project was created and conceptualized by [Mert Okuyaz](https://x.com/merto
 Live Demo
 [mertokuyaz.github.io](mertokuyaz.github.io)
 
-![Bitcoin Mining Simulator in Action](./screenshot.png)  
+![Bitcoin Mining Simulator in Action](./simulator.png)  
 
 ## Features
 
