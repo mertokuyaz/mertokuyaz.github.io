@@ -105,6 +105,31 @@ body {
     display: block;
 }
 
+/* GitHub Link */
+.github-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.github-link:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.github-link svg {
+    width: 22px;
+    height: 22px;
+}
+
 .cool-fact-banner {
     max-width: 1200px;
     margin: 0 auto 2.5rem auto;
@@ -209,6 +234,9 @@ pre#status-log {
 /* --- Responsive Design --- */
 @media (max-width: 900px) { .simulator-layout, .explanation-container { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 500px) { body { padding: 1rem; } .card { padding: 1.25rem; } #stats-container { flex-direction: column; align-items: flex-start; } }
+
+
+
 
 
 
