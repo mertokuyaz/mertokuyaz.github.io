@@ -105,31 +105,6 @@ body {
     display: block;
 }
 
-/* GitHub Link */
-.github-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    border: 2px solid var(--border-color);
-    color: var(--text-color);
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.github-link:hover {
-    border-color: var(--primary-color);
-    color: var(--primary-color);
-    transform: scale(1.05);
-}
-
-.github-link svg {
-    width: 22px;
-    height: 22px;
-}
-
 .cool-fact-banner {
     max-width: 1200px;
     margin: 0 auto 2.5rem auto;
@@ -168,7 +143,7 @@ body {
 /* --- Controls Card --- */
 .form-group { margin-bottom: 1.25rem; }
 .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.9rem; }
-textarea, select {
+textarea, select, input[type="number"] {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid var(--border-color);
@@ -179,8 +154,8 @@ textarea, select {
     color: var(--text-color);
     transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s ease, color 0.3s ease;
 }
-textarea:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.2); }
-textarea:disabled, select:disabled { background-color: #e9ecef; cursor: not-allowed; }
+textarea:focus, select:focus, input[type="number"]:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.2); }
+textarea:disabled, select:disabled, input[type="number"]:disabled { background-color: #e9ecef; cursor: not-allowed; }
 textarea { font-family: monospace; resize: vertical; }
 
 #mine-button { width: 100%; padding: 0.8rem; font-size: 1.1rem; font-weight: bold; color: #fff; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.2s, transform 0.1s; }
@@ -201,7 +176,7 @@ textarea { font-family: monospace; resize: vertical; }
 .icon { width: 32px; height: 32px; fill: var(--primary-color); }
 
 /* --- Results & Log --- */
-pre#status-log {
+.status-log {
     background-color: var(--log-bg);
     color: var(--log-text);
     padding: 1rem;
@@ -210,8 +185,9 @@ pre#status-log {
     word-wrap: break-word;
     font-size: 0.9rem;
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-family: monospace;
 }
-/* MODIFIED: Re-usable style for hashes */
+
 .hash-value { color: var(--hash-color); font-weight: bold; }
 
 #success-block { border: 2px solid var(--success-color); background-color: var(--success-bg); padding: 1rem 1.5rem; border-radius: 12px; }
@@ -229,11 +205,30 @@ pre#status-log {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- Explanation --- (no changes) */
-
 /* --- Responsive Design --- */
 @media (max-width: 900px) { .simulator-layout, .explanation-container { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 500px) { body { padding: 1rem; } .card { padding: 1.25rem; } #stats-container { flex-direction: column; align-items: flex-start; } }
+
+/* --- Threads Input --- */
+#threads { width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; box-sizing: border-box; background-color: var(--input-bg); color: var(--text-color); transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s ease, color 0.3s ease; }
+#threads:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(247, 147, 26, 0.2); }
+#threads:disabled { background-color: #e9ecef; cursor: not-allowed; }
+
+/* --- Mini-Blockchain Visualizer --- */
+.blockchain-layout { max-width: 1200px; margin: 0 auto 2rem auto; padding: 1.5rem; background-color: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: background-color 0.3s ease; }
+[data-theme="dark"] .blockchain-layout { box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+.blockchain-layout h2 { margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem; }
+.blocks-wrapper { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem; }
+.block-card { background-color: var(--result-item-bg); border-left: 4px solid var(--success-color); border-radius: 6px; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem; position: relative; transition: background-color 0.3s ease; }
+.block-card::before { content: '↓'; position: absolute; top: -1.75rem; left: 1rem; font-size: 1.5rem; color: var(--text-muted); font-weight: bold; }
+.block-card:first-child::before { display: none; }
+.block-header { font-weight: bold; color: var(--primary-color); margin-bottom: 0.5rem; font-size: 1.1rem; }
+.block-data-row { display: flex; flex-direction: column; font-size: 0.9rem; margin-bottom: 0.25rem; }
+.block-data-label { color: var(--text-muted); font-weight: bold; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.block-data-value { font-family: monospace; white-space: pre-wrap; word-wrap: break-word; color: var(--text-color); margin-top: 0.2rem; }
+
+/* --- Confetti --- */
+#confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
 
 
