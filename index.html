@@ -3,223 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; worker-src 'self'; img-src 'self' data:; media-src 'self' data:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; worker-src 'self'; img-src 'self' data:; media-src 'self' data:;">
+    <meta name="description" content="Explore Proof-of-Work with interactive mining, a blockchain tampering lab, miner races and live performance charts.">
     <title>Bitcoin Mining Simulator</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=x-profile">
+    <link rel="stylesheet" href="style.css?v=interactive-labs">
+    <script src="i18n.js" defer></script>
+    <script src="core.js" defer></script>
+    <script src="performance-chart.js" defer></script>
+    <script src="race.js" defer></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
-
     <header class="main-header">
         <div class="header-content">
-            <a class="social-link" href="https://github.com/mertokuyaz/bitcoinminingsimulator" target="_blank" rel="noopener noreferrer" aria-label="View Bitcoin Mining Simulator on GitHub (opens in a new tab)" title="Bitcoin Mining Simulator on GitHub">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-                    <path d="M12 .297a12 12 0 0 0-3.793 23.385c.6.111.82-.261.82-.577 0-.285-.011-1.04-.017-2.041-3.338.725-4.043-1.61-4.043-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.085 1.839 1.237 1.839 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.418-1.305.762-1.605-2.665-.303-5.467-1.334-5.467-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.51 11.51 0 0 1 12 6.098c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.655 1.652.243 2.873.119 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.625-5.479 5.921.431.372.816 1.102.816 2.222 0 1.606-.015 2.902-.015 3.297 0 .319.216.694.825.576A12.001 12.001 0 0 0 12 .297Z"/>
-                </svg>
+            <a class="social-link" href="https://github.com/mertokuyaz/mertokuyaz.github.io" target="_blank" rel="noopener noreferrer" data-i18n-aria="github" title="GitHub">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .297a12 12 0 0 0-3.793 23.385c.6.111.82-.261.82-.577v-2.041c-3.338.725-4.043-1.61-4.043-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.085 1.839 1.237 1.839 1.237 1.07 1.835 2.807 1.305 3.492.998.108-.776.418-1.305.762-1.605-2.665-.303-5.467-1.334-5.467-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.51 11.51 0 0 1 12 6.098c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.655 1.652.243 2.873.119 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.625-5.479 5.921.431.372.816 1.102.816 2.222v3.297c0 .319.216.694.825.576A12.001 12.001 0 0 0 12 .297Z"/></svg>
             </a>
-            <h1>Bitcoin Mining Simulator</h1>
+            <h1 data-i18n="title">Bitcoin Mining Simulator</h1>
             <div class="header-actions">
-                <a class="social-link" href="https://x.com/mertokuyaz_" target="_blank" rel="noopener noreferrer" aria-label="Visit @mertokuyaz_ on X (opens in a new tab)" title="@mertokuyaz_ on X">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-                        <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.64 7.584H.47l8.6-9.835L0 1.154h7.594l5.243 6.932 6.064-6.933Zm-1.29 19.49h2.039L6.487 3.24H4.3l13.31 17.403Z"/>
-                    </svg>
-                </a>
-                <a class="social-link" href="https://www.linkedin.com/in/mert-okuyaz-6a18b1147/" target="_blank" rel="noopener noreferrer" aria-label="Visit Mert Okuyaz on LinkedIn (opens in a new tab)" title="Mert Okuyaz on LinkedIn">
-                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.049c.476-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                </a>
-                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
-                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="5"/>
-                        <line x1="12" y1="1" x2="12" y2="3"/>
-                        <line x1="12" y1="21" x2="12" y2="23"/>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                        <line x1="1" y1="12" x2="3" y2="12"/>
-                        <line x1="21" y1="12" x2="23" y2="12"/>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-                    </svg>
-                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                    </svg>
+                <a class="social-link" href="https://x.com/mertokuyaz_" target="_blank" rel="noopener noreferrer" aria-label="Mert Okuyaz · X">𝕏</a>
+                <a class="social-link" href="https://www.linkedin.com/in/mert-okuyaz-6a18b1147/" target="_blank" rel="noopener noreferrer" aria-label="Mert Okuyaz · LinkedIn">in</a>
+                <label class="sr-only" for="language" data-i18n="language">Language</label>
+                <select id="language" class="language-select">
+                    <option value="en" lang="en">English</option>
+                    <option value="tr" lang="tr">Türkçe</option>
+                </select>
+                <button id="theme-toggle" class="theme-toggle" data-i18n-aria="theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M1 12h2m18 0h2M4.2 4.2l1.4 1.4m12.8 12.8 1.4 1.4M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
                 </button>
             </div>
         </div>
-        <p>An interactive tool to understand how Proof-of-Work mining works.</p>
-        <p class="credit">Created by <a href="https://x.com/mertokuyaz_" target="_blank" rel="noopener noreferrer">x.com/mertokuyaz_</a></p>
+        <p data-i18n="subtitle">An interactive playground for Proof-of-Work.</p>
+        <p class="credit"><span data-i18n="createdBy">Created by</span> <a href="https://x.com/mertokuyaz_" target="_blank" rel="noopener noreferrer">Mert Okuyaz</a></p>
+        <nav class="lab-nav" data-i18n-aria="navigation">
+            <a href="#mining" data-i18n="navMining">Mining</a>
+            <a href="#performance" data-i18n="navPerformance">Performance</a>
+            <a href="#blockchain-container" data-i18n="navChain">Blockchain lab</a>
+            <a href="#race" data-i18n="navRace">Miner race</a>
+        </nav>
     </header>
 
-    <div class="cool-fact-banner">
-        <p>
-            <strong>Did you know?</strong> In 2009, 3 hours of mining on a home PC could have earned ~100 BTC, worth over <strong>$5 Million USD</strong> today.
-            <br>
-            The 'Extreme' setting here is inspired by that era so you can actually find a block and have a feel of how it was at 2009!
-        </p>
-    </div>
+    <div class="cool-fact-banner"><p data-i18n="intro">Experiment safely: this is an educational simulation, not real Bitcoin mining. Hashing runs locally in your browser.</p></div>
+    <div id="error-container" class="error-banner hidden" role="alert"><p data-i18n="cryptoError">Web Crypto is unavailable. Open this site over HTTPS or localhost in a modern browser.</p></div>
+    <noscript><p class="error-banner">JavaScript is required. / JavaScript etkin olmalıdır.</p></noscript>
 
-    <!-- NEW: Error container for security warnings -->
-    <div id="error-container" class="error-banner hidden">
-        <p><strong>Error:</strong> The Web Crypto API is unavailable. This simulator must be run from a secure context (<code>https://</code> or <code>localhost</code>).</p>
-    </div>
+    <main>
+        <section id="mining" class="simulator-layout" data-i18n-aria="navMining">
+            <div class="card controls-card">
+                <h2 data-i18n="controls">Mining controls</h2>
+                <div class="form-group">
+                    <label for="threads" data-i18n="threads">Mining threads (Web Workers)</label>
+                    <input type="number" id="threads" min="1" max="16" value="1" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="block-data" data-i18n="blockData">Block data (up to 2000 characters)</label>
+                    <textarea id="block-data" rows="5" maxlength="2000">Alice → Bob: 1 BTC</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="difficulty" data-i18n="difficulty">Difficulty (leading hexadecimal zeros)</label>
+                    <select id="difficulty">
+                        <option value="2" data-i18n="difficulty2">2 · Quick demo</option>
+                        <option value="4" selected data-i18n="difficulty4">4 · Easy</option>
+                        <option value="5" data-i18n="difficulty5">5 · Medium</option>
+                        <option value="6" data-i18n="difficulty6">6 · Hard</option>
+                        <option value="7" data-i18n="difficulty7">7 · Extreme</option>
+                    </select>
+                </div>
+                <button id="mine-button" class="start" data-i18n="startMining">Start mining</button>
+                <p class="muted small" data-i18n="miningHint">Each new block includes the previous block's hash. Higher difficulty can take a long time; try the quick demo first.</p>
+            </div>
+            <div class="card output-card">
+                <h2 data-i18n="liveMining">Live mining</h2>
+                <div id="initial-message"><p data-i18n="initial">Click “Start mining” to search for a valid hash.</p></div>
+                <div id="stats-container" class="hidden">
+                    <div class="stat-item"><div><span class="label" data-i18n="timeSpent">Elapsed</span><span id="time-spent" class="stat-value">0 s</span></div></div>
+                    <div class="stat-item"><div><span class="label" data-i18n="hashRate">Hashes / second</span><span id="hash-rate" class="stat-value">0</span></div></div>
+                    <div class="stat-item"><div><span class="label" data-i18n="eta">Expected wait</span><span id="expected-time" class="stat-value">…</span></div></div>
+                </div>
+                <div id="results-container" class="hidden"><div id="status-log" class="status-log" role="status"></div></div>
+                <div id="success-block" class="hidden">
+                    <h2 data-i18n="successTitle">Block mined successfully!</h2>
+                    <div class="result-item"><span class="label" data-i18n="nonce">Nonce</span><div id="success-nonce" class="result-value"></div></div>
+                    <div class="result-item"><span class="label" data-i18n="resultHash">Resulting hash</span><div id="success-hash" class="result-value hash-value"></div></div>
+                </div>
+                <p class="muted small" data-i18n="etaHint">Expected wait is not a countdown. Each hash is a new independent attempt, so the remaining expected wait does not decrease as attempts fail.</p>
+            </div>
+        </section>
 
-    <main class="simulator-layout">
-        <!-- LEFT COLUMN: CONTROLS -->
-        <div class="card controls-card">
-            <h2>Controls</h2>
-            <div class="form-group">
-                <label for="threads">Mining Threads (Web Workers)</label>
-                <input type="number" id="threads" min="1" max="16" value="1" />
-            </div>
-            <div class="form-group">
-                <label for="block-data">Block Data to be Mined (Max 2000 chars)</label>
-                <textarea id="block-data" rows="5" maxlength="2000">Previous Hash: 0000000000000000000b9d3c5c3d2b8e2a3f8f1d8b7c6c5e4d3a2b1a0c9d
-Merkle Root: 4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b
-Timestamp: 1678912345</textarea>
-            </div>
-            <div class="form-group">
-                <label for="difficulty">Difficulty (Required leading zeros)</label>
-                <select id="difficulty">
-                    <option value="4">4 (Easy)</option>
-                    <option value="5" selected>5 (Medium)</option>
-                    <option value="6">6 (Hard)</option>
-                    <option value="7">7 (Extreme)</option>
-                </select>
-            </div>
-            <button id="mine-button" class="start">Start Mining</button>
-        </div>
+        <section id="performance" class="card lab-section">
+            <div class="section-heading"><h2 data-i18n="performanceTitle">Live performance</h2><button id="clear-chart" class="button secondary" data-i18n="clearChart">Clear history</button></div>
+            <p class="muted" data-i18n="performanceHint">Compare the last five runs with different thread counts. The chart shows measured hashes per second, not simulated speed. Device load and browser scheduling affect results.</p>
+            <div class="chart-container"><canvas id="performance-chart" role="img" data-i18n-aria="chartDescription"></canvas></div>
+            <p id="chart-empty" class="empty-state" data-i18n="chartEmpty">Start mining to see your first performance curve.</p>
+            <div class="table-scroll"><table id="performance-table">
+                <caption class="sr-only" data-i18n="performanceTitle">Live performance</caption>
+                <thead><tr><th data-i18n="run">Run</th><th data-i18n="threadCount">Threads</th><th data-i18n="difficultyShort">Zeros</th><th data-i18n="average">Average H/s</th><th data-i18n="peak">Peak H/s</th><th data-i18n="timeSpent">Elapsed</th><th data-i18n="result">Result</th></tr></thead>
+                <tbody id="performance-rows"></tbody>
+            </table></div>
+        </section>
 
-        <!-- RIGHT COLUMN: OUTPUT -->
-        <div class="card output-card">
-            <div id="initial-message">
-                <p>Click "Start Mining" to begin the process.</p>
-            </div>
-            
-            <div id="stats-container" class="hidden">
-                 <div class="stat-item">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path d="M12 7a1 1 0 0 0-1 1v4a1 1 0 0 0 .29.71l3 3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42L12.41 12V8a1 1 0 0 0-.41-1z"/></svg>
-                    <div><span class="label">Time Spent</span><span id="time-spent" class="stat-value">0s</span></div>
-                </div>
-                <div class="stat-item">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M11 11.26V21a1 1 0 0 0 2 0v-9.74l3.14 1.25a1 1 0 0 0 1-.12 1 1 0 0 0 .36-1.12L13.25 3.5a1 1 0 0 0-1.84 0l-4.25 8.77a1 1 0 0 0 .36 1.12 1 1 0 0 0 1-.12z"/></svg>
-                    <div><span class="label">Hashes/sec</span><span id="hash-rate" class="stat-value">0</span></div>
-                </div>
-                <div class="stat-item">
-                    <svg class="icon" viewBox="0 0 24 24"><path d="M15.34 3.42A2 2 0 0 0 13.91 3H4a2 2 0 0 0-2 2v8.91a2 2 0 0 0 .59 1.42l7.08 7.07a2 2 0 0 0 2.83 0l7.07-7.08a2 2 0 0 0 0-2.82zm-4.33 8.59a1 1 0 1 1-1.42-1.42 1 1 0 0 1 1.42 1.42z"/></svg>
-                    <div><span class="label">Est. Time (ETA)</span><span id="expected-time" class="stat-value">...</span></div>
-                </div>
-            </div>
-            
-            <div id="results-container" class="hidden">
-                <div id="status-log" class="status-log">Awaiting start...</div>
-            </div>
-            
-            <div id="success-block" class="hidden">
-                 <h2>Block Mined Successfully!</h2>
-                 <div class="result-item">
-                    <span class="label">Nonce</span>
-                    <div id="success-nonce" class="result-value"></div>
-                </div>
-                <div class="result-item">
-                    <span class="label">Resulting Hash</span>
-                    <div id="success-hash" class="result-value hash-value"></div>
-                </div>
-            </div>
-        </div>
+        <section id="blockchain-container" class="blockchain-layout lab-section">
+            <div class="section-heading"><h2 data-i18n="chainTitle">Blockchain tampering lab</h2><div class="button-group">
+                <button id="demo-chain" class="button" data-i18n="demoChain">Create 3 demo blocks</button>
+                <button id="repair-chain" class="button secondary" disabled data-i18n="repairChain">Repair invalid chain</button>
+                <button id="stop-chain" class="button danger hidden" data-i18n="stopRepair">Stop</button>
+                <button id="reset-chain" class="button secondary" disabled data-i18n="resetChain">Reset chain</button>
+            </div></div>
+            <p data-i18n="chainHint">Create demo blocks or mine your own, then edit an earlier block. Its hash changes, breaking the next block's stored link. Repairing re-mines the affected blocks in order.</p>
+            <p class="muted small" data-i18n="chainCaveat">Demo blocks use 2 leading zeros for quick experiments. This local chain has no network consensus; real Bitcoin also requires competing with the network's accumulated work.</p>
+            <p id="chain-status" class="lab-status" role="status"></p>
+            <div id="blocks-wrapper" class="blocks-wrapper"></div>
+        </section>
+
+        <section id="race" class="card lab-section">
+            <div class="section-heading"><h2 data-i18n="raceTitle">Miner race</h2><span class="badge" data-i18n="simulation">Probability simulation</span></div>
+            <p data-i18n="raceHint">Set three miners' relative hash power and run 30 rounds. A miner with twice the power has twice the chance per round, but can still lose.</p>
+            <div id="race-miners" class="race-grid"></div>
+            <div class="button-group"><button id="start-race" class="button" data-i18n="startRace">Start 30-round race</button><button id="reset-race" class="button secondary" data-i18n="resetRace">Reset results</button></div>
+            <p id="race-status" class="lab-status" role="status"></p>
+            <p class="muted small" data-i18n="raceCaveat">This is a mathematical model, not a hardware benchmark. Each miner gets an independent random waiting time; the first wins. Bars show observed win shares, not progress toward finding a hash. Small samples can differ from expected probabilities.</p>
+        </section>
+
+        <section class="explanation-container lab-section" data-i18n-aria="learnTitle">
+            <article class="card explanation-card"><h2 data-i18n="shaTitle">What is SHA-256?</h2><p data-i18n="shaText"></p><p data-i18n="shaText2"></p></article>
+            <article class="card explanation-card"><h2 data-i18n="powTitle">How Proof-of-Work works</h2><p data-i18n="powText"></p><p data-i18n="powText2"></p></article>
+            <article class="card explanation-card"><h2 data-i18n="linksTitle">Why changing a block breaks the chain</h2><p data-i18n="linksText"></p><p data-i18n="linksText2"></p></article>
+            <article class="card explanation-card"><h2 data-i18n="realityTitle">Simulation vs. Bitcoin</h2><p data-i18n="realityText"></p><p data-i18n="realityText2"></p></article>
+        </section>
     </main>
-    
-    <!-- NEW: Mini-Blockchain Visualizer -->
-    <div id="blockchain-container" class="blockchain-layout hidden">
-        <h2>Mined Blocks (Mini-Blockchain)</h2>
-        <div id="blocks-wrapper" class="blocks-wrapper"></div>
-    </div>
-    
-    <canvas id="confetti-canvas"></canvas>
-
-    <!-- ***** EXPLANATION CONTENT RESTORED ***** -->
-        <div class="card explanation-card">
-            <h2>What is SHA-256?</h2>
-            <p>
-                SHA-256 (Secure Hash Algorithm 256-bit) is a cryptographic hash function that takes an input and produces a 256-bit (32-byte) hash value. This output is a unique, fixed-size string of characters, often represented as a 64-character hexadecimal string.
-            </p>
-            <p>
-                Crucially, SHA-256 is a <strong>one-way algorithm</strong>. This means it's easy to compute a hash from an input, but virtually impossible to reverse the process to find the input from its hash. The only way to find a specific hash is through brute-force—trying endless combinations.
-            </p>
-            <p>
-                In Bitcoin mining, miners combine the block data (previous hash, Merkle root, timestamp) with a 'nonce'. They hash this combined data, and if the output doesn't meet the difficulty target, they change the nonce and try again. This brute-force process is the essence of Proof-of-Work.
-            </p>
-            <p>
-                You can experiment with SHA-256 yourself using this online tool: <a href="https://emn178.github.io/online-tools/sha256.html" target="_blank" rel="noopener noreferrer">SHA-256 Online Tool</a>.
-            </p>
-        </div>
-    <div class="explanation-container">
-        <div class="card explanation-card">
-            <h2>How Bitcoin Mining Works</h2>
-            <p>
-                Think of Bitcoin mining as a giant, competitive lottery where miners try to find a "winning number" to validate a new block of transactions. This process, called <strong>Proof-of-Work</strong>, secures the network without a central authority.
-            </p>
-            <ul>
-                <li><strong>The Block:</strong> A collection of recent, unconfirmed transactions. Miners gather these into a potential block.</li>
-                <li><strong>The Hash:</strong> A miner takes the block's header data (including a reference to the previous block's hash and a "Merkle Root" summarizing all transactions) and runs it through a one-way function called <strong>SHA-256</strong>. This produces a unique, fixed-length digital fingerprint called a "hash".</li>
-                <li><strong>The Nonce:</strong> Since the block data is fixed, miners add a special number called a <code>nonce</code> (number used once). They can change this nonce millions of times per second. Even a tiny change to the nonce results in a completely different hash.</li>
-                <li><strong>The Difficulty Target:</strong> The Bitcoin network sets a "difficulty target". To win, a miner must find a hash that is numerically <em>less than</em> this target. This is represented here as a required number of leading zeros (e.g., <code>00000...</code>). More zeros means a smaller target number, which is much harder to find.</li>
-            </ul>
-            <p>
-                Miners repeatedly change the <code>nonce</code>, calculate a new hash, and check if it meets the target. The first one to find a valid hash broadcasts their solution, wins the block reward (newly minted bitcoin), and the global lottery starts over for the next block.
-            </p>
-        </div>
-        <div class="card explanation-card">
-            <h2>How This Simulator Works</h2>
-            <p>
-                This tool mimics the core "guessing" loop of the mining process right in your browser.
-            </p>
-            <ul>
-                <li><strong>Block Data:</strong> The text in this box simulates the data a miner would hash. You can change it to see how it affects the final hash.</li>
-                <li><strong>Nonce (Behind the Scenes):</strong> When you click "Start Mining," the script starts at <code>nonce = 0</code>. It combines this nonce with the Block Data and calculates the SHA-256 hash.</li>
-                <li><strong>The Loop:</strong> If the hash doesn't meet the selected <strong>Difficulty</strong>, it increments the nonce (0, 1, 2, 3...) and tries again, thousands of times per second.</li>
-                <li><strong>Hashes/sec:</strong> This metric shows how fast your computer is performing this guess-and-check loop. Real Bitcoin miners use specialized hardware (ASICs) that can perform trillions of hashes per second.</li>
-                <li><strong>ETA:</strong> Based on the current hash rate, this gives a statistical estimate of how long it might take to find a winning hash, as the probability of finding a valid hash is based on the difficulty.</li>
-            </ul>
-            <p>
-                The <strong>Extreme (7)</strong> difficulty setting gives a taste of the "golden age" of CPU mining around 2009. The original block reward was <strong>50 BTC</strong>. With so few people on the network, it was theoretically possible for a hobbyist with a mediocre PC to solve a couple of blocks in just a few hours. That 3 hours of proof-of-work could have earned them 100 BTC, worth around <strong>$5 million</strong> at today's prices.
-            </p>
-        </div>
-        
-        <div class="card explanation-card">
-            <h2>Current Bitcoin Mining Reality (2024)</h2>
-            <p>
-                While this simulator lets you experience mining with just a few leading zeros, <strong>real Bitcoin mining today requires finding hashes with at least 17-18 leading zeros</strong>. This represents an astronomical increase in difficulty since Bitcoin's early days.
-            </p>
-            <ul>
-                <li><strong>Impossible for Solo Mining:</strong> The current difficulty is so high that even the most powerful consumer hardware would take thousands of years to find a single valid block.</li>
-                <li><strong>CPU/GPU Mining is Dead:</strong> Regular computer processors and graphics cards are completely obsolete for Bitcoin mining. They simply cannot compete with the hash rates required.</li>
-                <li><strong>ASIC Machines Only:</strong> Today's Bitcoin miners use specialized hardware called ASICs (Application-Specific Integrated Circuits) that are designed exclusively for SHA-256 hashing. These machines can perform hundreds of terahashes per second.</li>
-                <li><strong>Industrial Scale:</strong> Modern Bitcoin mining operations are massive industrial facilities with thousands of ASIC machines, consuming megawatts of electricity and requiring sophisticated cooling systems.</li>
-            </ul>
-            <p>
-                The difficulty adjustment mechanism ensures that blocks are found approximately every 10 minutes regardless of the total network hash rate. As more powerful mining equipment joins the network, the difficulty automatically increases to maintain this timing. This is why Bitcoin mining has evolved from a hobby anyone could do on their laptop to a highly specialized industrial operation.
-            </p>
-        </div>
-    </div>
-    <!-- ***** END OF RESTORED CONTENT ***** -->
-
-    <script src="script.js"></script>
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,55 +1,43 @@
-// worker.js
-const calculateSHA256 = async (input) => {
-    const textAsBuffer = new TextEncoder().encode(input);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', textAsBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    let hashHex = '';
-    for (let i = 0; i < hashArray.length; i++) {
-        const hex = hashArray[i].toString(16);
-        hashHex += hex.length === 1 ? '0' + hex : hex;
-    }
-    return hashHex;
-};
-
+// Each worker owns a disjoint nonce sequence. Report deltas, including the
+// successful batch, so short runs also appear in performance measurements.
+'use strict';
+const encoder = new TextEncoder();
 let isMining = false;
 
-self.onmessage = async (e) => {
-    const { type, data } = e.data;
-    
-    if (type === 'start') {
-        isMining = true;
-        const { blockData, target, startNonce, step, batchSize } = data;
-        let currentNonce = startNonce;
-        let hashesDone = 0;
-        let lastHash = '';
-
-        while (isMining) {
-            for (let i = 0; i < batchSize; i++) {
-                if (!isMining) break;
-                
-                if (currentNonce >= Number.MAX_SAFE_INTEGER) {
-                    self.postMessage({ type: 'error', message: 'Nonce overflow' });
-                    isMining = false;
-                    break;
-                }
-
-                lastHash = await calculateSHA256(blockData + currentNonce);
-                hashesDone++;
-
-                if (lastHash.startsWith(target)) {
-                    self.postMessage({ type: 'success', nonce: currentNonce, hash: lastHash });
-                    isMining = false;
-                    return;
-                }
-                currentNonce += step;
-            }
-
-            if (isMining) {
-                self.postMessage({ type: 'progress', hashesDone, lastHash, lastNonce: currentNonce - step });
-                hashesDone = 0;
-            }
-        }
-    } else if (type === 'stop') {
+self.onmessage = async event => {
+    if (event.data.type === 'stop') {
         isMining = false;
+        return;
+    }
+    if (event.data.type !== 'start' || isMining) return;
+    isMining = true;
+    const { blockData, target, startNonce, step } = event.data.data;
+    let nonce = startNonce;
+    let hashesDone = 0;
+    let lastReport = performance.now();
+    try {
+        if (typeof blockData !== 'string' || !/^0{1,7}$/.test(target) || !Number.isInteger(step) || step < 1 || !Number.isSafeInteger(nonce) || nonce < 0) {
+            throw new Error('Invalid mining parameters');
+        }
+        while (isMining) {
+            if (!Number.isSafeInteger(nonce)) throw new Error('Nonce overflow');
+            const digest = await crypto.subtle.digest('SHA-256', encoder.encode(blockData + nonce));
+            const hash = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+            hashesDone++;
+            if (hash.startsWith(target)) {
+                self.postMessage({ type: 'success', nonce, hash, hashesDone });
+                isMining = false;
+                return;
+            }
+            if (performance.now() - lastReport >= 100) {
+                self.postMessage({ type: 'progress', hashesDone, lastHash: hash, lastNonce: nonce });
+                hashesDone = 0;
+                lastReport = performance.now();
+            }
+            nonce += step;
+        }
+    } catch (error) {
+        isMining = false;
+        self.postMessage({ type: 'error', message: error.message });
     }
 };
