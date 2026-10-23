@@ -61,7 +61,11 @@
                 </div>
                 <div class="form-group">
                     <label for="block-data" data-i18n="blockData">Block data (up to 2000 characters)</label>
-                    <textarea id="block-data" rows="5" maxlength="2000">Alice → Bob: 1 BTC</textarea>
+                    <textarea id="block-data" rows="9" maxlength="2000" aria-describedby="block-data-hint">Previous Hash: 0000000000000000000000000000000000000000000000000000000000000000
+Merkle Root: 4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b
+Timestamp: 1678912345
+Transaction Data: Alice → Bob: 1 BTC</textarea>
+                    <p id="block-data-hint" class="muted small" data-i18n="blockDataHint">Edit the example header and transaction data. The Merkle root is illustrative; the simulator adds the chain’s previous-hash link automatically.</p>
                 </div>
                 <div class="form-group">
                     <label for="difficulty" data-i18n="difficulty">Difficulty (leading hexadecimal zeros)</label>

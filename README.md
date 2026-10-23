@@ -43,6 +43,8 @@ The first Bitcoin miner to find a valid block can broadcast it to the network an
 
 ### The Simulator's Role
 
+The **Block data** textarea starts with an editable example containing `Previous Hash`, `Merkle Root`, `Timestamp`, and `Transaction Data`. These fields are example text, including an illustrative Merkle root; they are not parsed as a real Bitcoin header. The simulator adds the actual previous block hash separately when mining, preserving the linked-chain experiment.
+
 The JavaScript code in `script.js`, `worker.js`, and `core.js` automates this process:
 
 -   When you click **"Start mining"**, it reads the `Block data` textarea and includes the preceding block's hash. The first block references 64 zero characters.
