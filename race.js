@@ -87,13 +87,17 @@
         }, round.seconds * 1000);
     }
 
+    function stop() {
+        if (!running) return;
+        clearTimeout(timer);
+        running = false;
+        status = { key: 'raceStopped', values: { completed } };
+        render();
+    }
+
     startButton.addEventListener('click', () => {
-        if (running) {
-            clearTimeout(timer);
-            running = false;
-            status = { key: 'raceStopped', values: { completed } };
-            render();
-        } else {
+        if (running) stop();
+        else {
             reset();
             running = true;
             nextRound();
@@ -101,6 +105,7 @@
     });
     resetButton.addEventListener('click', () => reset());
     document.addEventListener('languagechange', render);
-    window.addEventListener('pagehide', () => { clearTimeout(timer); running = false; });
+    // A page restored from the back/forward cache keeps its DOM and JS state.
+    window.addEventListener('pagehide', stop);
     render();
 })();

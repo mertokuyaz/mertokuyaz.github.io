@@ -23,15 +23,17 @@
 
     // Theme and language settings remain local; storage may be unavailable.
     const media = window.matchMedia('(prefers-color-scheme: dark)');
-    document.documentElement.dataset.theme = storage.get('bitcoin-miner-theme') || (media.matches ? 'dark' : 'light');
+    let selectedTheme = storage.get('bitcoin-miner-theme');
+    document.documentElement.dataset.theme = selectedTheme || (media.matches ? 'dark' : 'light');
     byId('theme-toggle').addEventListener('click', () => {
         const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        selectedTheme = theme;
         document.documentElement.dataset.theme = theme;
         storage.set('bitcoin-miner-theme', theme);
         chart.draw();
     });
     media.addEventListener('change', event => {
-        if (!storage.get('bitcoin-miner-theme')) {
+        if (!selectedTheme) {
             document.documentElement.dataset.theme = event.matches ? 'dark' : 'light';
             chart.draw();
         }
